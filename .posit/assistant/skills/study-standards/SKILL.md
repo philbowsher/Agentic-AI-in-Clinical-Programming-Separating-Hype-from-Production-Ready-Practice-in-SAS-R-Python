@@ -21,7 +21,7 @@ This study uses SAS for the data steps (SDTM review and ADaM) and R for everythi
 3. R reads `data/adam/adsl.sas7bdat` and saves `data/adam/adsl.parquet`. This is where the work moves from SAS to R.
 4. The define.xml check, the TLFs and the {commons} app all read `data/adam/adsl.parquet`.
 5. `data/submission/datasets/adsl.xpt` is exported from `data/adam/adsl.parquet`.
-6. The submission folder `data/submission/` holds the datasets and the programs as text files, the way a hybrid SAS + R submission is sent to the FDA.
+6. The submission folder `data/submission/` holds the datasets and the programs as text files, the way a hybrid SAS + R submission is sent to a regulatory agency.
 
 Always tell the programmer which file you read, where you wrote the code, and which file you wrote.
 
@@ -31,6 +31,8 @@ Always tell the programmer which file you read, where you wrote the code, and wh
 - The SAS server shares the home folder with Positron, but not `/tmp`. Keep every SAS file inside the project folder.
 - Before every SAS run, set the SAS working folder to the project folder, so the relative paths in the programs work. The SAS session can restart on its own and then starts in its WORK folder again:
   `data _null_; rc = dlgcdir("<full path of the project folder>"); put rc=; run;`
+- If a SAS step fails with "Physical file does not exist" or a missing libref, the SAS session has most likely restarted. Set the working folder again, re-run the step, and tell the programmer that the session restarted.
+- The SAS session's page size is only 21 lines, so PROC FREQ crosstabs fail with "ERROR: Insufficient page size to print frequency table". Start every SAS program that prints output with `options pagesize=max linesize=max;`.
 - Save SAS programs in `programs/sas/<name>.sas`. SAS work lives in .sas files and their logs, not in Quarto documents. Explain SAS results in the chat.
 - Run a program with its log saved to a file:
   `proc printto log="programs/sas/<name>.log" new; run; %include "programs/sas/<name>.sas"; proc printto; run;`
@@ -54,6 +56,7 @@ Always tell the programmer which file you read, where you wrote the code, and wh
 
 - Read `data/adam/adsl.sas7bdat` with `haven::read_sas()`, then save it to `data/adam/adsl.parquet` with duckdb (`COPY ... TO ... (FORMAT parquet)`), and read it back to confirm the row count.
 - R code that uses ADSL reads `data/adam/adsl.parquet` with duckdb (`SELECT * FROM read_parquet('data/adam/adsl.parquet')`).
+- Before the first duckdb connection in a session, run `dir.create("~/.duckdb", showWarnings = FALSE)`. Without the folder, duckdb asks "create ~/.duckdb? (Yes/no/cancel)" in the console and the console waits for a typed answer. If the console is already stuck on that question, stop and ask the programmer to type `Yes` in the console. Do not run more code until they have.
 
 ## Checking a dataset against the spec
 
@@ -64,12 +67,14 @@ Always tell the programmer which file you read, where you wrote the code, and wh
 ## Exporting for submission
 
 - Write submission datasets to `data/submission/datasets/<name>.xpt` with {xportr}, using the define.xml (read with {metacore}) for types, lengths, labels, order and formats. File names must be 8 characters or fewer, for example `adsl.xpt`. In the installed {xportr}, `xportr_write()` takes `path`, `metadata`, `domain` and `strict_checks`; it has no `label` argument.
+- The define.xml holds several datasets. Read it with `metacore::define_to_metacore()`, then keep only ADSL with `metacore::select_dataset(mc, "ADSL")` before any xportr call. If you pass the full object, labels are silently missing for some variables.
+- Export only the variables that the define.xml lists for ADSL. `programs/sas/adsl.sas` carries extra DM columns through (for example DOMAIN, ARMCD, COUNTRY). Drop them and name them in the chat. Expect 254 rows and 22 variables after the fix in SAS.
 
 ## Building the submission folder
 
 When asked to build the submission folder:
 
-1. The FDA asks for program source code as plain text files (single-byte ASCII). Copy each program into `data/submission/programs/`, renamed to `.txt` with its language in the name: `programs/sas/adsl.sas` becomes `adsl-sas.txt`, and an R program `programs/r/t_dm.R` becomes `t_dm-r.txt`.
+1. Regulatory agencies ask for program source code as plain text files (single-byte ASCII). Copy each program into `data/submission/programs/`, renamed to `.txt` with its language in the name: `programs/sas/adsl.sas` becomes `adsl-sas.txt`, and an R program `programs/r/t_dm.R` becomes `t_dm-r.txt`.
 2. The TLF program must exist as its own file. If the demographics TLF code is only in `02_tlf.qmd`, save it first as `programs/r/t_dm.R` (it reads `data/adam/adsl.parquet` and writes to `output/tables/`), and run it in a fresh R session to confirm it works on its own.
 3. Check that every `.txt` file is plain ASCII. If a file has other characters, list the lines and ask before changing them.
 4. Make sure `data/submission/datasets/adsl.xpt` exists (see Exporting for submission).

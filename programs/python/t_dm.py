@@ -1,5 +1,6 @@
 # Program: t_dm.py
-# Purpose: Demographics table (safety population) in Python, from the same
+# Purpose: Demographics table (intent-to-treat population, as sop/table-standards.md
+#          says) in Python, from the same
 #          ADSL file the R steps use. Shows that parquet works in any language.
 # Input:   data/adam/adsl.parquet (built in SAS, saved as parquet in R)
 # Output:  output/tables/t_dm_python.html
@@ -12,7 +13,7 @@ from pathlib import Path
 import polars as pl
 from great_tables import GT, md
 
-adsl = pl.read_parquet("data/adam/adsl.parquet").filter(pl.col("SAFFL") == "Y")
+adsl = pl.read_parquet("data/adam/adsl.parquet").filter(pl.col("ITTFL") == "Y")
 arms = ["Placebo", "Xanomeline Low Dose", "Xanomeline High Dose"]
 n_arm = {a: adsl.filter(pl.col("TRT01P") == a).height for a in arms}
 
@@ -51,7 +52,7 @@ table = (
     GT(wide, rowname_col="stat", groupname_col="group")
     .tab_header(
         title="Table 14-2.01 Summary of Demographic Characteristics",
-        subtitle="Safety Population",
+        subtitle="Intent-to-Treat Population",
     )
     .cols_label(**{a: md(f"{a}<br>(N={n_arm[a]})") for a in arms})
     .cols_align("right", columns=arms)

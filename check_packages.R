@@ -24,6 +24,12 @@ also_needed <- c("haven", "duckdb", "DBI", "dplyr", "metacore", "xportr", "gt", 
 still_missing <- c(needed, also_needed)[!vapply(c(needed, also_needed), requireNamespace,
                                                 logical(1), quietly = TRUE)]
 
+# duckdb 1.5 asks "duckdb: create ~/.duckdb? (Yes/no/cancel)" in the console the
+# first time it connects in a new account. The question blocks the console and
+# Posit Assistant can't answer it. If the folder already exists, it never asks.
+dir.create(file.path(Sys.getenv("HOME", path.expand("~")), ".duckdb"),
+           showWarnings = FALSE)
+
 if (length(still_missing) == 0) {
   message("All workshop packages are ready.")
 } else {

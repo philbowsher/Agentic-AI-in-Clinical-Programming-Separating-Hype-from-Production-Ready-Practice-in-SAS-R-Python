@@ -30,4 +30,5 @@ SAS runs in the Positron console session "SAS (workshop-sas)", not in the termin
 
 - For any programming task in this project, load the `study-standards` skill.
 - Report findings; the programmer decides. Never call an output validated or final.
+- When a prompt asks you to create, write, install or fix a named file (for example `.vscode/mcp.json`, a skill, a section of a Quarto document), that is the request: do it. This includes fixing your own code from that same step. "The programmer decides" applies to changes nobody asked for, such as edits to `programs/sas/adsl.sas` or `trusted/`.
 - Keep answers short and say which file or function produced each result.

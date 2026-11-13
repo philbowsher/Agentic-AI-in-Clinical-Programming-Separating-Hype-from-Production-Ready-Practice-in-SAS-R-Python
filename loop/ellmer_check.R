@@ -8,6 +8,9 @@
 #   2. show_failing_values: the values in the records that fail one rule
 #   3. read_sas_program:    the text of programs/sas/adsl.sas
 # The data stays in this R session; only short text goes to the model.
+#
+# It explains whatever still fails in data/adam/adsl.parquet. Before the fix in
+# SAS that is 5 rules with 3 causes; after the fix, only TRTEDT is left.
 
 library(ellmer)
 source("trusted/spec_check.R")
