@@ -11,7 +11,7 @@ This study uses SAS for the data steps (SDTM review and ADaM) and R for everythi
 
 - SAS: Base SAS and PROC SORT, SQL, FREQ, MEANS, CONTENTS, PRINT, PRINTTO.
 - R: dplyr, tidyr, stringr, lubridate, haven, duckdb, DBI, metacore, xportr, pointblank, gt, gtsummary, cards, shiny, bslib, and the functions in `trusted/`.
-- Python: polars and great_tables. Python reads `data/adam/adsl.parquet` with `polars.read_parquet()`. The example is `programs/python/t_dm.py`; run it from the project folder.
+- Python: polars and great_tables. Python reads `data/adam/adsl.parquet` with `polars.read_parquet()`. Save Python programs in `programs/python/<name>.py`, run them from the project folder, and write tables to `output/tables/`. Follow the same table standards as R. Python's `round()` rounds half to even, so for display values round half away from zero with `decimal.Decimal(...).quantize(..., rounding=ROUND_HALF_UP)`.
 - If something else seems needed, stop and ask.
 
 ## The data trail (every step uses the previous step's output)

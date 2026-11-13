@@ -18,7 +18,7 @@ A hands-on workshop in Positron and Posit Workbench. You work with Posit Assista
 - `AGENTS.md`: project notes Posit Assistant (agent) reads first.
 - `programs/sas/`: the study ADSL program in SAS (`adsl.sas`).
 - `programs/r/`: where R programs go.
-- `programs/python/`: the same demographics table in Python (polars and Great Tables), read from the same parquet file. Run `python programs/python/t_dm.py`.
+- `programs/python/`: empty at the start. In the optional Python step, Posit Assistant (agent) writes the same demographics table in Python (polars and Great Tables), read from the same parquet file.
 - `trusted/`: approved company code: the spec check and the review measures.
 - `sop/`: a table SOP you turn into your own skill.
 - `commons_app/`: the {commons} review app. Run `shiny::runApp("commons_app")`.
