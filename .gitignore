@@ -1,0 +1,43 @@
+# Private files: handoff, slide source, status notes (never in the repo)
+notes/
+*.zip
+
+# Downloaded or generated data (setup_data.R recreates it)
+data/sdtm/
+data/sdtm_original/
+data/parquet/
+data/adam/
+data/reference/
+data/submission/
+metadata/*.xml
+
+# Attendee work
+01_adsl.qmd
+02_tlf.qmd
+*_files/
+*.html
+*.htm
+programs/r/*.R
+programs/sas/*.log
+programs/sas/*.lst
+output/
+
+# Skills attendees install or create during the workshop
+.posit/assistant/skills/*
+!.posit/assistant/skills/study-standards/
+
+# Local settings, credentials, logs
+.posit/assistant/settings.json
+.Renviron
+.env
+.Rhistory
+.RData
+.Rproj.user/
+.quarto/
+rsconnect/
+.shinychat/
+logs/
+__pycache__/
+.venv/
+*.bak
+rsconnect-python/

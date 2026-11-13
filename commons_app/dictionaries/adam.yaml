@@ -1,0 +1,73 @@
+name: adam
+description: >-
+  CDISCPILOT01 ADSL built in SAS by programs/sas/adsl.sas (run by Posit Assistant (agent))
+  and saved as parquet for R, plus the ADSL from the original CDISC pilot (made in SAS) for comparison.
+tables:
+  - name: adsl
+    description: Study ADSL built in SAS by programs/sas/adsl.sas, read from data/adam/adsl.parquet. Draft for programmer review.
+    columns:
+      - name: USUBJID
+        type: string(id)
+        description: Unique subject identifier.
+      - name: TRT01P
+        type: string
+        description: Planned treatment for period 01.
+        values: [Placebo, Xanomeline Low Dose, Xanomeline High Dose]
+      - name: TRT01A
+        type: string
+        description: Actual treatment for period 01.
+      - name: AGE
+        type: number
+        description: Age in years.
+      - name: SEX
+        type: string
+        description: Sex.
+        values: ["F", "M"]
+      - name: RACE
+        type: string
+        description: Race.
+      - name: AGEGR1
+        type: string
+        description: Pooled age group 1 (<65, 65-80, >80).
+      - name: ITTFL
+        type: string
+        description: Intent-to-treat population flag.
+        values: ["Y", "N"]
+      - name: SAFFL
+        type: string
+        description: Safety population flag.
+        values: ["Y", "N"]
+      - name: TRTSDT
+        type: date
+        description: Date of first exposure to treatment.
+      - name: TRTEDT
+        type: date
+        description: Date of last exposure to treatment.
+      - name: TRTDURD
+        type: number
+        description: Total treatment duration in days (TRTEDT - TRTSDT + 1).
+      - name: EOSSTT
+        type: string
+        description: End of study status.
+        values: [COMPLETED, DISCONTINUED]
+  - name: adsl_ref
+    description: ADSL from the original CDISC pilot submission, made in SAS. Reference for comparison only.
+    columns:
+      - name: USUBJID
+        type: string(id)
+        description: Unique subject identifier.
+      - name: TRT01P
+        type: string
+        description: Planned treatment for period 01.
+      - name: AGEGR1
+        type: string
+        description: Pooled age group 1.
+      - name: SAFFL
+        type: string
+        description: Safety population flag.
+      - name: TRTSDT
+        type: date
+        description: Date of first exposure to treatment.
+      - name: TRTEDT
+        type: date
+        description: Date of last exposure to treatment.
